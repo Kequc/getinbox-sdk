@@ -28,7 +28,7 @@ getinbox.deliver({ accountId, text }, (error) => {
 
 ## Instance
 
-#### constructor (uri: string, options: Object)
+#### constructor ([uri: string], options?: Object)
 
 The constructor accepts a uri you would like to connect to. by default in production this is `wss://api.getinbox.io` and any other environment `ws://localhost:9090`. A set of options might be provided for use with the underlying [passage-rpc](https://www.npmjs.com/package/passage-rpc) library.
 
@@ -52,9 +52,9 @@ Adds an application to the connection, it will authenticate as early as possible
 
 Removes the application which matches the given `id`, it will logout as soon as possible if currently connected.
 
-#### deliver (params: Object, callback? (error: Error) => void) => void
+#### deliver (params: Object) => void
 
-If the account isn't configured to receive messages from one of your applications, delivery will fail. If delivery fails because of a service outage the message will attempt to be queued for delivery when the connection is re-established. It is possible your callback will not be called for quite a while.
+If the account isn't configured to receive messages from one of your applications, delivery will fail. If delivery fails because of a service outage the message will be queued for delivery when the connection is re-established.
 
 ## Params
 
@@ -76,6 +76,26 @@ Attachments are formatted like so.
 | content | File content encoded in base64 format. |
 | contentType | File type/mime type. |
 
+## Queue
+
+By default the included queue mechanism makes use of application memory. Which would be erased in case the application is closed. As an option you may provide your own implementation with persistent memory if you are worried about deliverability.
+
+```javascript
+const queue = {
+    add (item) {
+        myPersistentStore.add(item);
+    },
+    getItems (callback) {
+        myPersistentStore.fetch((items) => {
+            myPersistentStore.clear();
+            callback(items);
+        });
+    }
+};
+
+const getinbox = new Getinbox({ queue });
+```
+
 ## Events
 
 In addition to the standard events returned by [passage-rpc](https://www.npmjs.com/package/passage-rpc).
@@ -84,3 +104,4 @@ In addition to the standard events returned by [passage-rpc](https://www.npmjs.c
 | - | - | - |
 | `getinbox.authenticate` | id, error | An application has attempted to authenticate. |
 | `getinbox.logout` | id, error | An application has been logged out. |
+| `getinbox.error` | error, attrs | A message failed to deliver. |

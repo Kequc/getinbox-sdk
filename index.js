@@ -1,6 +1,6 @@
 const Passage = require('passage-rpc');
 const Application = require('./application');
-const Queue = require('./queue');
+const MemQueue = require('./mem-queue');
 
 const env = process.env.NODE_ENV || 'development';
 const URI = (env === 'production' ? 'wss://api.getinbox.io' : 'ws://localhost:9090');
@@ -39,16 +39,26 @@ function onClose (reconnecting) {
 }
 
 function onAuthenticate () {
-    if (this.isReady) this.queue.deliver(this);
+    if (this.isReady) {
+        this.queue.getItems((items) => {
+            for (const item of items) {
+                this.deliver(item);
+            }
+        });
+    }
 }
 
 class Getinbox extends Passage {
     constructor (uri, options = {}) {
+        if (typeof uri === 'object') {
+            options = uri;
+            uri = undefined;
+        }
         super(uri || URI, Object.assign({}, DEFAULT_OPTIONS, options));
 
+        this.queue = options.queue || new MemQueue();
         this.connectionStatus = CONNECTION_STATUS.CLOSED;
         this.applications = new Set();
-        this.queue = new Queue();
 
         this.on('rpc.open', onOpen.bind(this));
         this.on('rpc.close', onClose.bind(this));
@@ -84,12 +94,12 @@ class Getinbox extends Passage {
         }
     }
 
-    deliver (params, callback) {
+    deliver (params) {
         this.send('message.create', params, (error) => {
             if (error && error.code === 503) {
-                this.queue.add(params, callback);
-            } else if (typeof callback === 'function') {
-                callback(error);
+                this.queue.add(params);
+            } else if (error) {
+                this.emit('getinbox.error', error, params);
             }
         });
     }
