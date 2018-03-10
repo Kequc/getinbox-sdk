@@ -1,0 +1,29 @@
+{
+  "name": "getinbox-sdk",
+  "version": "0.1.0",
+  "description": "Node sdk for message delivery to getinbox",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kequc/getinbox-sdk.git"
+  },
+  "keywords": [
+    "getinbox",
+    "websocket"
+  ],
+  "author": "Nathan Lunde-Berry",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kequc/getinbox-sdk/issues"
+  },
+  "homepage": "https://github.com/Kequc/getinbox-sdk#readme",
+  "devDependencies": {
+    "eslint": "^4.18.2"
+  },
+  "dependencies": {
+    "passage-rpc": "^1.1.10"
+  }
+}
