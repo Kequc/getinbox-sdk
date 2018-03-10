@@ -24,6 +24,6 @@
     "eslint": "^4.18.2"
   },
   "dependencies": {
-    "passage-rpc": "^1.1.10"
+    "passage-rpc": "^1.1.11"
   }
 }
