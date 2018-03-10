@@ -17,9 +17,10 @@ const getinbox = new Getinbox();
 getinbox.addApplication('<my-application-id>', '<my-secret-key>');
 ```
 ```javascript
+const accountId = '<account-id>';
 const text = 'Hello from my application.';
 
-getinbox.deliver('<account-id>', { text }, (error) => {
+getinbox.deliver({ accountId, text }, (error) => {
     if (!error)
         console.log('Message delivered successfully!');
 });
@@ -29,7 +30,7 @@ getinbox.deliver('<account-id>', { text }, (error) => {
 
 #### constructor (uri: string, options: Object)
 
-The constructor accepts a uri you would like to connect to. by default in production this is `wss://api.getinbox.io` and any other environment `ws://localhost:9090`. As well as a set of options which matches up with the underlying [passage-rpc](https://www.npmjs.com/package/passage-rpc) library.
+The constructor accepts a uri you would like to connect to. by default in production this is `wss://api.getinbox.io` and any other environment `ws://localhost:9090`. A set of options might be provided for use with the underlying [passage-rpc](https://www.npmjs.com/package/passage-rpc) library.
 
 #### conectionStatus
 
@@ -41,6 +42,8 @@ Returns one of the following.
 | RECONNECTING | `reconnecting` |
 | CLOSED | `closed` |
 
+When the connection falls into a closed state, it will wait 10 minutes and attempt to reconnect again.
+
 #### addApplication (id: string, secretKey: string) => void
 
 Adds an application to the connection, it will authenticate as early as possible and will re-authenticate with the API on any reconnection event.
@@ -49,9 +52,9 @@ Adds an application to the connection, it will authenticate as early as possible
 
 Removes the application which matches the given `id`, it will logout as soon as possible if currently connected.
 
-#### deliver (accountId: string, params: Object, callback? (error: Error) => void) => void
+#### deliver (params: Object, callback? (error: Error) => void) => void
 
-Delivers a message to the specified `accountId`, if the account isn't authorised to receive messages from any of your applications delivery will fail. If a callback is not provided and delivery fails this method will throw an error.
+If the account isn't configured to receive messages from one of your applications, delivery will fail. If delivery fails because of a service outage the message will attempt to be queued for delivery when the connection is re-established. It is possible your callback will not be called for quite a while.
 
 ## Params
 
