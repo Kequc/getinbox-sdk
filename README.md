@@ -17,12 +17,9 @@ const getinbox = new Getinbox();
 getinbox.addApplication('<my-application-id>', '<my-secret-key>');
 ```
 ```javascript
-const accountId = '<account-id>';
-const text = 'Hello from my application.';
-
-getinbox.deliver({ accountId, text }, (error) => {
-    if (!error)
-        console.log('Message delivered successfully!');
+getinbox.deliver({
+    accountId: '<account-id>',
+    text: 'Hello from my application.'
 });
 ```
 
@@ -95,6 +92,14 @@ const queue = {
 
 const getinbox = new Getinbox({ queue });
 ```
+
+#### add (item: Object) => void
+
+A message was attempted to be delivered while service was unavailable. This should add the given message to the queue.
+
+#### getItems (callback (items: Object[]) => void) => void
+
+A connection has been re-established. This should fetch all queued messages and clear them from the store, before returning the items using the provided callback.
 
 ## Events
 
