@@ -59,19 +59,20 @@ When delivering a message only the `accountId` and `text` parameter is required.
 
 | param | description |
 | - | - |
-| subject | Message subject. |
-| replyTo | Email address so that they might contact you. |
-| text | Body of the message in text format. |
-| html | Body of the message in html format. |
-| attachments | Array of attachments. |
+| `accountId` | Account to deliver to. |
+| `subject` | Message subject. |
+| `replyTo` | Email address so that they might contact you. |
+| `text` | Body of the message in text format. |
+| `html` | Body of the message in html format. |
+| `attachments` | Array of attachments. |
 
 Attachments are formatted like so.
 
 | param | description |
 | - | - |
-| filename | Name of attachment. |
-| content | File content encoded in base64 format. |
-| contentType | File type/mime type. |
+| `filename` | Name of attachment. |
+| `content` | File content encoded in base64 format. |
+| `contentType` | File type/mime type. |
 
 ## Queue
 
