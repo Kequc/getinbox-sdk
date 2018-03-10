@@ -27,7 +27,7 @@ getinbox.deliver({
 
 #### constructor ([uri: string], options?: Object)
 
-The constructor accepts a uri you would like to connect to. by default in production this is `wss://api.getinbox.io` and any other environment `ws://localhost:9090`. A set of options might be provided for use with the underlying [passage-rpc](https://www.npmjs.com/package/passage-rpc) library.
+The constructor accepts a uri you would like to connect to. by default in production this is `wss://api.getinbox.io` and any other environment `ws://localhost:9090`. A set of options might be provided for use with the underlying [npm passage-rpc](https://www.npmjs.com/package/passage-rpc) `Passage` instance.
 
 #### conectionStatus
 
@@ -103,7 +103,7 @@ A connection has been re-established. This should fetch all queued messages and 
 
 ## Events
 
-In addition to the standard events returned by [passage-rpc](https://www.npmjs.com/package/passage-rpc).
+In addition to the standard events returned by [npm passage-rpc](https://www.npmjs.com/package/passage-rpc).
 
 | event | params | description |
 | - | - | - |
