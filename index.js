@@ -4,9 +4,11 @@ const MemQueue = require('./mem-queue');
 
 const env = process.env.NODE_ENV || 'development';
 const URI = (env === 'production' ? 'wss://api.getinbox.io' : 'ws://localhost:9090');
+
 const DEFAULT_OPTIONS = {
     reconnect: true,
-    reconnectTimeout: 6000
+    reconnectTimeout: 6000,
+    persistent: true
 };
 const CONNECTION_STATUS = {
     OPEN: 'open',
@@ -23,12 +25,7 @@ function onOpen () {
 }
 
 function onClose (reconnecting) {
-    if (reconnecting) {
-        this.connectionStatus = CONNECTION_STATUS.RECONNECTING;
-    } else {
-        this.connectionStatus = CONNECTION_STATUS.CLOSED;
-        setTimeout(() => { this.connect(); }, 10 * 60 * 1000);
-    }
+    this.connectionStatus = (reconnecting ? CONNECTION_STATUS.RECONNECTING : CONNECTION_STATUS.CLOSED);
 
     for (const application of this.applications) {
         if (application.authenticated === false) continue;
